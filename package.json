@@ -1,0 +1,18 @@
+{
+  "name": "myze-service",
+  "version": "1.0.0",
+  "description": "Backend service for data collection and distribution",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "./node_modules/nodemon/bin/nodemon.js index.js"
+  },
+  "author": "Xianhai Cao",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
