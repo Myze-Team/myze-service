@@ -2,16 +2,19 @@
 .directory
 *~
 
-
 # npm
 node_modules
 package-lock.json
 *.log
 *.gz
 
+# aws
+.elasticbeanstalk/
 
-# Coveralls
-coverage
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
 
-# Benchmarking
-benchmarks/graphs
+# .env
+.env
