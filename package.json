@@ -4,6 +4,7 @@
   "description": "Backend service for data collection and distribution",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "./node_modules/nodemon/bin/nodemon.js index.js"
   },
