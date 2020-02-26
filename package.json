@@ -5,15 +5,19 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/nodemon/bin/nodemon.js index.js"
+    "dev": "./node_modules/nodemon/bin/nodemon.js index.js",
+    "create-db": "node tests/createProfilesTable.js",
+    "load-data": "node tests/loadProfileData.js",
+    "read-data": "node tests/readDataTest.js"
   },
   "author": "Xianhai Cao",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.626.0",
     "express": "^4.17.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "dotenv": "^8.2.0"
   }
 }
