@@ -10,13 +10,13 @@ AWS.config.update({
 const docClient = new AWS.DynamoDB.DocumentClient()
 
 console.log('[NOTE] Importing profiles into DynamoDB.')
-const profiles = JSON.parse(fs.readFileSync('./profileData.json', 'utf8'))
+const profiles = JSON.parse(fs.readFileSync('./tests/profileData.json', 'utf8'))
 
 profiles.forEach((profile) => {
   const params = {
     TableName: 'Profiles',
     Item: {
-      'id': profile.id,
+      'id': "" + profile.id,
       'name': profile.name,
       'size': profile.size,
       'apparel1': profile.apparel1,

@@ -13,7 +13,7 @@ const id = 1
 
 const params = {
   TableName: table,
-  Key: { 'id': id }
+  Key: { 'id': "" + id }
 }
 
 docClient.get(params, (err, data) => {

@@ -12,7 +12,7 @@ console.log('END ' + process.env.DB_ENDPOINT)
 const params = {
   TableName : 'Profiles',
   KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
-  AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'N' }],
+  AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
   ProvisionedThroughput: {
     ReadCapacityUnits: 5,
     WriteCapacityUnits: 5
