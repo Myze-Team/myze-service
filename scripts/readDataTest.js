@@ -8,12 +8,12 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient()
 
-const table = 'Profiles'
-const id = 1
+const table = 'User'
+const email = 'johnny@gmail.com'
 
 const params = {
   TableName: table,
-  Key: { 'id': "" + id }
+  Key: { 'email': "" + email }
 }
 
 docClient.get(params, (err, data) => {

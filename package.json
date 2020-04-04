@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "dev": "./node_modules/nodemon/bin/nodemon.js index.js",
-    "create-db": "node tests/createProfilesTable.js",
-    "load-data": "node tests/loadProfileData.js",
-    "read-data": "node tests/readDataTest.js"
+    "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
+    "create-db": "node scripts/createUserTable.js",
+    "read-data": "node scripts/readDataTest.js"
   },
   "author": "Xianhai Cao",
   "license": "ISC",
@@ -17,9 +16,14 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "firebase-admin": "^8.10.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "uuid": "^7.0.1"
   },
   "devDependencies": {
+    "firebase": "^7.10.0",
     "nodemon": "^2.0.2"
   }
 }
