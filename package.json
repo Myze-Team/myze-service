@@ -2,9 +2,9 @@
   "name": "myze-service",
   "version": "1.0.0",
   "description": "Backend service for data collection and distribution",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
     "create-db": "node scripts/createUserTable.js",
     "read-data": "node scripts/readDataTest.js"
