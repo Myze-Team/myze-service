@@ -1,0 +1,20 @@
+[
+  {
+    "id" : "1",
+    "brand" : "supreme",
+    "type" : "t-shirt",
+    "name" : "box logo shirt"
+  },
+  {
+    "id" : "2",
+    "brand" : "balenciaga",
+    "type" : "hoodie",
+    "name" : "pullover hoodie"
+  },
+  {
+    "id" : "3",
+    "brand" : "burberry",
+    "type" : "jacket",
+    "name" : "diamond quilted thermoregulated jacket"
+  }
+]

@@ -13,7 +13,7 @@ const docClient = new AWS.DynamoDB.DocumentClient()
 
 console.log('END ' + process.env.DB_ENDPOINT)
 const params = {
-  TableName : 'User',
+  TableName : 'Clothing',
   KeySchema: [{ AttributeName: 'id', KeyType: 'HASH' }],
   AttributeDefinitions: [{ AttributeName: 'id', AttributeType: 'S' }],
   ProvisionedThroughput: {
@@ -27,24 +27,26 @@ dynamodb.createTable(params, (err, data) => {
     console.error('Unable to create table. Error JSON:', JSON.stringify(err, null, 2))
   else {
     console.log('Created table. Table description JSON:', JSON.stringify(data, null, 2))
-    console.log('[NOTE] Importing users into DynamoDB.')
+    console.log('[NOTE] Importing clothing into DynamoDB.')
 
-    const users = JSON.parse(fs.readFileSync('./scripts/userData.json', 'utf8'))
+    const users = JSON.parse(fs.readFileSync('./scripts/clothingData.json', 'utf8'))
 
-    users.forEach((user) => {
+    users.forEach((clothing) => {
       const params = {
-        TableName: 'User',
+        TableName: 'Clothing',
         Item: {
-          'id': user.id,
-          'name': user.name,
+          'id': clothing.id,
+          'brand': clothing.brand,
+          'type': clothing.type,
+          'name': clothing.name,
         }
       }
 
       docClient.put(params, function(err, data) {
         if (err)
-          console.error('Unable to add user', user.name, '. Error JSON:', JSON.stringify(err, null, 2))
+          console.error('Unable to add user', clothing.name, '. Error JSON:', JSON.stringify(err, null, 2))
         else
-          console.log('PutItem succeeded:', user.name)
+          console.log('PutItem succeeded:', clothing.name)
       })
     })
   }

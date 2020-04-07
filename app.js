@@ -21,7 +21,9 @@ app.use(express.json())
 app.get('/', (req, res) => {
   res.send('Hello, world!')
 })
+
 app.use('/users', require('./routes/users'))
+app.use('/clothings', require('./routes/clothings'))
 
 // test routes
 app.use('/testauth', require('./firebase/authenticate'))
