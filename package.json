@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "./node_modules/nodemon/bin/nodemon.js server.js",
-    "create-db": "node scripts/createUserTable.js",
+    "create-tables": "node scripts/createTables.js",
+    "drop-tables": "node scripts/dropTables.js",
     "read-data": "node scripts/readDataTest.js"
   },
   "author": "Xianhai Cao",
