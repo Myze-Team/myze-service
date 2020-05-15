@@ -15,12 +15,13 @@ module.exports = (req, res, next) => {
   }
 
   // extract the token
-  const token = authHeader.split(' ')[1]
+  //const token = authHeader.split(' ')[1]
 
   // perform the verification
-  admin.auth().verifyIdToken(token)
+  admin.auth().verifyIdToken(authHeader)
     .then((decodedToken) => {
-      res.locals.uid = decodedToken.uid
+      console.log('TOKEN CONTENTS', decodedToken)
+      res.locals.userInfo = decodedToken
       next()
     })
     .catch(() => {

@@ -12,21 +12,15 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient()
 
-// [GET]: grabs the meta item for a given user
-// does not include connection or clothes items
-router.get('/:id', (req, res) => {
-  helper.getItem(docClient, res, req.params.id)
-})
 
 // [GET]: retrieves user id given the account id
-router.get('/acc/:acc_id', (req, res) => {
-  console.log(req.params)
+router.get('/acc', (req, res) => {
   const params = {
     TableName: 'Profile',
     IndexName: 'Acc_GSI',
     KeyConditionExpression: 'Acc_GSI = :acc_gsi AND SK = :sk',
     ExpressionAttributeValues: {
-      ':acc_gsi': req.params.acc_id,
+      ':acc_gsi': res.locals.userInfo.uid,
       ':sk': 'meta',
     }
   }
@@ -41,7 +35,7 @@ router.get('/acc/:acc_id', (req, res) => {
     } else {
       // item not found
       if (Object.keys(user).length === 0) {
-        console.error('User not found:', req.params.id)
+        console.error('User not found:', res.locals.userInfo.uid)
         res.status(400).send('Account not found')
         return
       }
@@ -58,7 +52,6 @@ router.get('/acc/:acc_id', (req, res) => {
 // [GET]: grabs all data associated with user
 // includes related clothing items
 router.get('/:id/clothes', (req, res) => {
-  console.log(req.params)
   const params = {
     TableName: 'Profile',
     IndexName: 'User_GSI',
@@ -70,6 +63,12 @@ router.get('/:id/clothes', (req, res) => {
   }
 
   helper.queryItems(docClient, res, params);
+})
+
+// [GET]: grabs the meta item for a given user
+// does not include connection or clothes items
+router.get('/:id', (req, res) => {
+  helper.getItem(docClient, res, req.params.id)
 })
 
 // [POST]: create new user
@@ -93,7 +92,7 @@ router.post('/new', (req, res) => {
     Item: {
       'PK': 'user_'.concat(uuid()),
       'SK': 'meta',
-      'Acc_GSI': req.body.acc_id.toString(),
+      'Acc_GSI': res.locals.userInfo.uid,
       'name': req.body.name.toString(),
     }
   }
@@ -165,7 +164,7 @@ router.post('/:id/clothes/new', async (req, res) => {
 })
 
 const validateUser = (data) => {
-  if (isEmpty(data.acc_id)) return false
+  console.log(data)
   if (isEmpty(data.name)) return false
 
   return true
