@@ -34,6 +34,14 @@ router.get('/:id/users', (req, res) => {
   helper.queryItems(docClient, res, params);
 })
 
+// [POST]: create new clothing
+// expects body to contain the following fields:
+//
+// name: <name of clothing>
+// brand: <brand/company>
+// type: <style of clothing>
+//
+// NOTE: using an existing id will overwrite the previous item
 router.post('/new', (req, res) => {
   // validate parameters
   if (!validate(req.body)) {

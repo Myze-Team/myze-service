@@ -14,6 +14,7 @@ const docClient = new AWS.DynamoDB.DocumentClient()
 
 
 // [GET]: retrieves user id given the account id
+// the user id is used to identify the user in dynamoDB
 router.get('/acc', (req, res) => {
   const params = {
     TableName: 'Profile',
@@ -72,12 +73,9 @@ router.get('/:id', (req, res) => {
 })
 
 // [POST]: create new user
-// expects body to contain the following fields
-// NOTE: emails should not be used as user identifiers as not
-// all users may have created their accounts with emails
+// expects body to contain the following fields:
 //
-// id: user id
-// name: name of user
+// name: <name of user>
 //
 // NOTE: using an existing id will overwrite the previous item
 router.post('/new', (req, res) => {
@@ -100,6 +98,15 @@ router.post('/new', (req, res) => {
   helper.putItem(docClient, res, params)
 })
 
+// [POST]: create new connection between user and clothing
+// expects body to contain the following fields:
+//
+// clothes_id: <id of clothing>
+// time: <date obtained>
+// size: <size of the clothing>
+// cost: <cost if purchased>
+//
+// NOTE: using an existing id will overwrite the previous item
 router.post('/:id/clothes/new', async (req, res) => {
   if (!validateConn(req.body)) {
     res.status(400).send('Bad arguments')
