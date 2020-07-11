@@ -3,7 +3,7 @@ import click
 from flask.cli import with_appcontext
 
 def get_db():
-    return boto3.client('dynamodb', endpoint_url='http://localhost:8000', region_name='us-west-2')
+    return boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-west-2', aws_access_key_id='test', aws_secret_access_key='test')
 
 def delete_tables(dynamodb):
     tables = dynamodb.list_tables()['TableNames']
@@ -24,6 +24,14 @@ def create_tables(dynamodb):
         AttributeDefinitions=[
             {
                 'AttributeName': 'id',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'email',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'password',
                 'AttributeType': 'S'
             }
         ],
