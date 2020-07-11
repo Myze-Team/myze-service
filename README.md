@@ -6,6 +6,7 @@ To set up the project:
 python3 -m venv venv
 
 ```
+Then, have DynamoDB running in the background.
 
 To activate the virtual environment:
 ```sh
