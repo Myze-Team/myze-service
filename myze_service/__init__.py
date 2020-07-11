@@ -35,8 +35,7 @@ def create_app(test_config=None):
         return 'Hello, World!'
     
     from . import db
-    dynamodb = db.get_db()
-    table = dynamodb.Table('Profiles')
+    db.init_app(app)
 
     #import routes.helloWorld
 
@@ -44,6 +43,8 @@ def create_app(test_config=None):
 
     @app.route('/users', methods=['GET', 'POST'])
     def get_items():
+        dynamodb = db.get_db()
+        table = dynamodb.Table('Profiles')
         if request.method == 'GET':
             return json_response(table.scan()['Items'])
         else:
