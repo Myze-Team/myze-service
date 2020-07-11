@@ -7,8 +7,10 @@ def get_db():
 
 def delete_tables(dynamodb):
     tables = dynamodb.list_tables()['TableNames']
-    for table in tables:
-        dynamodb.delete_table(TableName=table)
+    available_tables = ['Profiles']
+    for table in available_tables:
+        if table in tables:
+            dynamodb.delete_table(TableName=table)
 
 def create_tables(dynamodb):
     table = dynamodb.create_table(
