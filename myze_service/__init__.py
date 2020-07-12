@@ -5,7 +5,7 @@ from flask import request
 from werkzeug.security import generate_password_hash
 #from werkzeug.security import check_password_hash
 from boto3.dynamodb.conditions import Key, Attr
-from cerberus import Validator
+from .custom_validator import CustomValidator
 
 def create_app(test_config=None):
     # create and configure the app
@@ -43,9 +43,8 @@ def create_app(test_config=None):
         if request.method == 'GET':
             return {'profiles': profiles.scan()['Items']}
         else:
-            # add custom email validation
-            v = Validator({
-                'email': {'type': 'string', 'required': True},
+            v = CustomValidator({
+                'email': {'type': 'string', 'required': True, 'email': True},
                 'password':{'type': 'string', 'required': True, 'minlength': 8}
             })
 
@@ -72,7 +71,6 @@ def create_app(test_config=None):
                 return {'message': v.errors}
   
     return app
-
 
 def json_response(data, response_code=200):
     return json.dumps(data), response_code, {'Content-Type': 'application/json'}
