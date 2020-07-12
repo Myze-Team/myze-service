@@ -25,7 +25,7 @@ def create_tables(dynamodb):
             {
                 'AttributeName': 'id',
                 'AttributeType': 'S'
-            },
+            }
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 5,

@@ -4,6 +4,7 @@ from flask import Flask
 from flask import request
 from werkzeug.security import generate_password_hash
 #from werkzeug.security import check_password_hash
+from boto3.dynamodb.conditions import Key, Attr
 from cerberus import Validator
 
 def create_app(test_config=None):
@@ -36,11 +37,11 @@ def create_app(test_config=None):
     db.init_app(app)
 
     @app.route('/users', methods=['GET', 'POST'])
-    def get_items():
+    def create_user():
         dynamodb = db.get_db()
-        table = dynamodb.Table('Profiles')
+        profiles = dynamodb.Table('Profiles')
         if request.method == 'GET':
-            return json_response(table.scan()['Items'])
+            return {'profiles': profiles.scan()['Items']}
         else:
             # add custom email validation
             v = Validator({
@@ -54,17 +55,21 @@ def create_app(test_config=None):
             }
 
             if v.validate(body):
-                # add unique email check
-                table.put_item(
-                    Item={
-                        'id': str(table.item_count),
-                        'email': body['email'],
-                        'password': generate_password_hash(body['password'])
-                    }
-                )
-                return {"message": "student entry created"}
+                if profiles.scan(
+                    FilterExpression = Attr('email').eq(body['email'])
+                )["Count"] == 0:
+                    profiles.put_item(
+                        Item = {
+                            'id': str(profiles.item_count),
+                            'email': body['email'],
+                            'password': generate_password_hash(body['password'])
+                        }
+                    )
+                    return {'message': 'account created'}
+                else:
+                    return {'message': 'email already exists'}
             else:
-                return {"message": v.errors}
+                return {'message': v.errors}
   
     return app
 
