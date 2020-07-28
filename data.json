@@ -1,0 +1,90 @@
+[
+    {
+        "PK": {"S": "USER_1"},
+        "SK": {"S": "USER_1"},
+        "gender": {"S": "male"}
+    },
+    {
+        "PK": {"S": "USER_2"},
+        "SK": {"S": "USER_2"},
+        "gender": {"S": "female"}
+    },
+    {
+        "PK": {"S": "CLOTHES_1"},
+        "SK": {"S": "CLOTHES_1"},
+        "Item-Size-GSI": {"S": "SIZE_S"},
+        "price": {"S": "$30"},
+        "name": {"S": "team knit short"},
+        "brand": {"S": "Nike"},
+        "category": {"S": "short"},
+        "count": {"N": "1"}
+    },
+    {
+        "PK": {"S": "CLOTHES_2"},
+        "SK": {"S": "CLOTHES_2"},
+        "Item-Size-GSI": {"S": "SIZE_M"},
+        "price": {"S": "$30"},
+        "name": {"S": "team knit short"},
+        "brand": {"S": "Nike"},
+        "category": {"S": "short"},
+        "count": {"N": "0"}
+    },
+    {
+        "PK": {"S": "CLOTHES_3"},
+        "SK": {"S": "CLOTHES_3"},
+        "Item-Size-GSI": {"S": "SIZE_S"},
+        "price": {"S": "$60"},
+        "name": {"S": "dry academy pro pullover hoodie"},
+        "brand": {"S": "Nike"},
+        "category": {"S": "hoodie"},
+        "count": {"N": "1"}
+    },
+    {
+        "PK": {"S": "CLOTHES_4"},
+        "SK": {"S": "CLOTHES_4"},
+        "Item-Size-GSI": {"S": "SIZE_M"},
+        "price": {"S": "$60"},
+        "name": {"S": "dry academy pro pullover hoodie"},
+        "brand": {"S": "Nike"},
+        "category": {"S": "hoodie"},
+        "count": {"N": "0"}
+    },
+    {
+        "PK": {"S": "BRAND_Nike"},
+        "SK": {"S": "team knit short"},
+        "size": {
+          "M": {
+            "small": {"S": "CLOTHES_1"},
+            "medium": {"S": "CLOTHES_2"}
+          }
+        }
+    },
+    {
+        "PK": {"S": "BRAND_Nike"},
+        "SK": {"S": "dry academy pro pullover hoodie"},
+        "size": {
+          "M": {
+            "small": {"S": "CLOTHES_3"},
+            "medium": {"S": "CLOTHES_4"}
+          }
+        }
+    },
+    {
+        "PK": {"S": "USER_1"},
+        "SK": {"S": "TRANSACTION_1"},
+        "rating": {"N": "0"},
+        "returned": {"BOOL": true},
+        "User-Item-GSI": {"S": "CLOTHES_1"},
+        "ClothesName": {"S": "team knit short"},
+        "review": {"S": "doesn't fit"}
+    },
+    {
+        "PK": {"S": "USER_1"},
+        "SK": {"S": "TRANSACTION_2"},
+        "rating": {"N": "0"},
+        "returned": {"BOOL": true},
+        "User-Item-GSI": {"S": "CLOTHES_3"},
+        "ClothesName": {"S": "dry academy pro pullover hoodie"},
+        "review": {"S": "fits nice"}
+    }
+]

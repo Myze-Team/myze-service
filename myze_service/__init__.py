@@ -1,11 +1,11 @@
 import os
 import json
-from flask import Flask
+from flask import Flask, Blueprint
 from flask import request
 from werkzeug.security import generate_password_hash
 #from werkzeug.security import check_password_hash
 from boto3.dynamodb.conditions import Key, Attr
-from .custom_validator import CustomValidator
+#from .custom_validator import CustomValidator
 
 def create_app(test_config=None):
     # create and configure the app
@@ -38,44 +38,52 @@ def create_app(test_config=None):
     from . import db
     db.init_app(app)
 
-    import routes.helloWorld
+    from .routes.helloWorld import helloWorld
+    from .routes.users import userBlueprint
+    from .routes.clothings import clothingBlueprint
+    from .routes.transactions import transactionBlueprint
 
-    #app.register_blueprint(routes.helloWorld)
 
-    @app.route('/users', methods=['GET', 'POST'])
-    def create_user():
-        dynamodb = db.get_db()
-        profiles = dynamodb.Table('Profiles')
-        if request.method == 'GET':
-            return {'profiles': profiles.scan()['Items']}
-        else:
-            v = CustomValidator({
-                'email': {'type': 'string', 'required': True, 'email': True},
-                'password':{'type': 'string', 'required': True, 'minlength': 8}
-            })
+    app.register_blueprint(helloWorld)
+    app.register_blueprint(userBlueprint, url_prefix="/users")
+    app.register_blueprint(clothingBlueprint, url_prefix="/clothings")
+    app.register_blueprint(transactionBlueprint, url_prefix="/transactions")
 
-            body = {
-                'email': request.args.get('email'),
-                'password': request.args.get('password')
-            }
+    # @app.route('/users', methods=['GET', 'POST'])
+    # def create_user():
+    #     dynamodb = db.get_db()
+    #     profiles = dynamodb.Table('Profiles')
+    #     if request.method == 'GET':
+    #         return {'profiles': profiles.scan()['Items']}
+    #     else:
+    #         v = CustomValidator({
+    #             'email': {'type': 'string', 'required': True, 'email': True},
+    #             'password':{'type': 'string', 'required': True, 'minlength': 8}
+    #         })
 
-            if v.validate(body):
-                if profiles.scan(
-                    FilterExpression = Attr('email').eq(body['email'])
-                )["Count"] == 0:
-                    profiles.put_item(
-                        Item = {
-                            'id': str(profiles.item_count),
-                            'email': body['email'],
-                            'password': generate_password_hash(body['password'])
-                        }
-                    )
-                    return {'message': 'account created'}
-                else:
-                    return {'message': 'email already exists'}
-            else:
-                return {'message': v.errors}
-  
+    #         body = {
+    #             'email': request.args.get('email'),
+    #             'password': request.args.get('password')
+    #         }
+
+    #         if v.validate(body):
+    #             if profiles.scan(
+    #                 FilterExpression = Attr('email').eq(body['email'])
+    #             )["Count"] == 0:
+    #                 profiles.put_item(
+    #                     Item = {
+    #                         'id': str(profiles.item_count),
+    #                         'email': body['email'],
+    #                         'password': generate_password_hash(body['password'])
+    #                     }
+    #                 )
+    #                 return {'message': 'account created'}
+    #             else:
+    #                 return {'message': 'email already exists'}
+    #         else:
+    #             return {'message': v.errors}
+    
+    
     return app
 
 def json_response(data, response_code=200):

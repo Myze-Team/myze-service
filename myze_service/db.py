@@ -1,9 +1,15 @@
 import boto3
 import click
+import os
+import json
 from flask.cli import with_appcontext
 
 def get_db():
     return boto3.resource('dynamodb', endpoint_url='http://localhost:8000', region_name='us-west-2', aws_access_key_id='test', aws_secret_access_key='test')
+
+def get_client():
+    return boto3.client('dynamodb', endpoint_url='http://localhost:8000', region_name='us-west-2', aws_access_key_id='test', aws_secret_access_key='test')
+
 
 def delete_tables(dynamodb):
     tables = map(lambda t: t.name, dynamodb.tables.all())
@@ -17,21 +23,90 @@ def create_tables(dynamodb):
         TableName='Profiles',
         KeySchema=[
             {
-                'AttributeName': 'id',
+                'AttributeName': 'PK',
                 'KeyType': 'HASH'
+            }, 
+            {
+                'AttributeName': 'SK',
+                'KeyType': 'RANGE'
             }
         ],
         AttributeDefinitions=[
             {
-                'AttributeName': 'id',
+                'AttributeName': 'PK',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': 'SK',
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': "User-Item-GSI",
+                'AttributeType': 'S'
+            },
+            {
+                'AttributeName': "Item-Size-GSI",
                 'AttributeType': 'S'
             }
+        ],
+        GlobalSecondaryIndexes=[
+            {
+                'IndexName': 'User-Item-GSI',
+                'KeySchema': [
+                    {
+                        'AttributeName': 'User-Item-GSI',
+                        'KeyType': 'HASH'
+                    },
+                    {
+                        'AttributeName': 'PK',
+                        'KeyType': 'RANGE'
+                    }
+                ],
+                'Projection': {
+                    'ProjectionType': 'ALL',
+                },
+                'ProvisionedThroughput': {
+                    'ReadCapacityUnits': 5,
+                    'WriteCapacityUnits': 5
+                }
+            },
+            {
+                'IndexName': 'Item-Size-GSI',
+                'KeySchema': [
+                    {
+                        'AttributeName': 'Item-Size-GSI',
+                        'KeyType': 'HASH'
+                    },
+                    {
+                        'AttributeName': 'PK',
+                        'KeyType': 'RANGE'
+                    }
+                ],
+                'Projection': {
+                    'ProjectionType': 'ALL',
+                },
+                'ProvisionedThroughput': {
+                    'ReadCapacityUnits': 5,
+                    'WriteCapacityUnits': 5
+                }
+            },
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 5,
             'WriteCapacityUnits': 5
         }
     )
+    
+    with open('data.json', 'r') as datafile:
+        data = json.load(datafile)
+
+    client = get_client()
+
+    for item in data:
+        client.put_item(
+            TableName="Profiles",
+            Item=item
+        )
 
 @click.command('init-db')
 @with_appcontext
