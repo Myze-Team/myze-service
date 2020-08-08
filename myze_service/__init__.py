@@ -28,8 +28,6 @@ def create_app(test_config=None):
     except OSError:
         pass
     
-    #app.register_blueprint(routes.helloWorld)
-
     # a simple page that says hello
     @app.route('/hello')
     def hello():

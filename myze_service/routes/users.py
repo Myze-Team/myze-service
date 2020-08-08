@@ -1,6 +1,6 @@
 from flask import request, Blueprint, jsonify
 from .. import db
-
+import json
 
 userBlueprint = Blueprint("userBlueprint", __name__)
 
@@ -20,7 +20,10 @@ def get_user(id):
         }
     )
 
-    return res
+    if res.get("Item"):
+        return json.dumps(res["Item"])
+    else:
+        return (jsonify("User not found"), 404)
 
 """
 Create new user
@@ -38,21 +41,22 @@ def create_user():
     gender = data.get("gender")
 
     if not userId:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'userId'"), 400)
 
     if not gender:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'gender'"), 400)
 
     client = db.get_client()
-
-    res = client.put_item(
-        TableName = "Profiles",
-        ConditionExpression = "attribute_not_exists(PK)",
-        Item = {
-            "PK": {"S": "USER_" + str(userId)},
-            "SK": {"S": "USER_" + str(userId)},
-            "gender": {"S": gender}
-        }
-    )
-
-    return res
+    try:
+        res = client.put_item(
+            TableName = "Profiles",
+            ConditionExpression = "attribute_not_exists(PK)",
+            Item = {
+                "PK": {"S": "USER_" + str(userId)},
+                "SK": {"S": "USER_" + str(userId)},
+                "gender": {"S": gender}
+            }
+        )
+        return (jsonify("Successfully created user"), 200)
+    except Exception as e:
+        return (jsonify("Could not add user"), 500)

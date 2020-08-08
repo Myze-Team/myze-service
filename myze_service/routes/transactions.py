@@ -19,7 +19,11 @@ def get_transaction_by_user(id):
         ExpressionAttributeValues = {":pkey": {"S":"USER_" + str(id)},":skey": {"S":"TRANSACTION_"}}
     )
 
-    return res
+
+    if res["Count"]:
+        return json.dumps(res["Items"])
+    else:
+        return (jsonify("User has no transactions"), 404)
 
 """
 Get all transaction information by clothing id. (All users who bought clothing)
@@ -36,7 +40,11 @@ def get_transaction_by_item(id):
         ExpressionAttributeValues = {":pkey": {"S":"CLOTHES_" + str(id)}}
     )
 
-    return res
+    if res["Count"]:
+        return json.dumps(res["Items"])
+    else:
+        return (jsonify("Item has no transactions"), 404)
+
 
 """
 Add a new transaction.
@@ -52,93 +60,110 @@ rating: the rating user gave product
 """
 @transactionBlueprint.route("/new", methods=["POST"])
 def create_transaction():
-    userId = request.args.get("userId")
-    clothesId = request.args.get("clothesId")
-
-    if not userId:
-        return (jsonify("Bad Arguments"), 400)
-
-    if not clothesId:
-        return (jsonify("Bad Arguments"), 400)
-
     data = request.get_json()
     if not data:
         return (jsonify("Bad Arguments"), 400)
 
+    userId = data.get("userId")
+    clothesId = data.get("clothesId")
     name = data.get("name")
     rating = data.get("rating")
     returned = data.get("returned")
     review = data.get("review")
+
+    if not userId:
+        return (jsonify("Missing argument 'userId'"), 400)
+
+    if not clothesId:
+        return (jsonify("Missing argument 'clothesId'"), 400)
     
     if not name:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'name'"), 400)
     
     if not rating:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'rating'"), 400)
 
     if returned is None:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'returned'"), 400)
 
     if not review:
-        return (jsonify("Bad Arguments"), 400)
+        return (jsonify("Missing argument 'review'"), 400)
 
     transactionId = uuid.uuid4()
 
     client = db.get_client()
 
     """
-    Is rating, returned, review required for user to put in?
+    Check if user and clothing exists
     """
-    res = client.put_item(
+    user = client.get_item(
         TableName = "Profiles",
-        Item = {
+        Key = {
             "PK": {"S": "USER_" + userId},
-            "SK": {"S": "TRANSACTION_" + str(transactionId)},
-            "User-Item-GSI": {"S": "CLOTHES_" + clothesId},
-            "ClothesName": {"S": name},
-            "returned": {"BOOL": returned},
-            "rating": {"N": str(rating)},
-            "review": {"S": review}
+            "SK": {"S": "USER_" + userId}
         }
     )
+
+    if not user.get("Item"):
+        return (jsonify("Could not add transaction"), 500)
+
+    clothes = client.get_item(
+        TableName = "Profiles",
+        Key = {
+            "PK": {"S": "CLOTHES_" + clothesId},
+            "SK": {"S": "CLOTHES_" + clothesId}
+        }
+    )
+
+    if not clothes.get("Item"):
+        return (jsonify("Could not add transaction"), 500)
+
+
+    """
+    Is rating, returned, review required for user to put in?
+    """
+
 
     """
     Adds transaction and increments count
     """
-    res = client.transact_write_items(
-        TransactItems = [
-            {
-                "Put": {
-                    "TableName": "Profiles",
-                    "Item": {
-                        "PK": {"S": "USER_" + userId},
-                        "SK": {"S": "TRANSACTION_" + str(transactionId)},
-                        "User-Item-GSI": {"S": "CLOTHES_" + clothesId},
-                        "ClothesName": {"S": name},
-                        "returned": {"BOOL": returned},
-                        "rating": {"N": str(rating)},
-                        "review": {"S": review}
+    try:
+        res = client.transact_write_items(
+            TransactItems = [
+                {
+                    "Put": {
+                        "TableName": "Profiles",
+                        "Item": {
+                            "PK": {"S": "USER_" + userId},
+                            "SK": {"S": "TRANSACTION_" + str(transactionId)},
+                            "User-Item-GSI": {"S": "CLOTHES_" + clothesId},
+                            "ClothesName": {"S": name},
+                            "returned": {"BOOL": returned},
+                            "rating": {"N": str(rating)},
+                            "review": {"S": review}
+                        }
+                    }
+                },
+                {
+                    "Update": {
+                        "TableName": "Profiles",
+                        "Key": {
+                            "PK": {"S": "CLOTHES_" + clothesId},
+                            "SK": {"S": "CLOTHES_" + clothesId},
+                        },
+                        "UpdateExpression": "ADD #count :increment",
+                        "ExpressionAttributeNames": {
+                            "#count": "count"
+                        },
+                        "ExpressionAttributeValues": {
+                            ":increment": {"N": "1"}
+                        }
+                        
                     }
                 }
-            },
-            {
-                "Update": {
-                    "TableName": "Profiles",
-                    "Key": {
-                        "PK": {"S": "CLOTHES_" + clothesId},
-                        "SK": {"S": "CLOTHES_" + clothesId},
-                    },
-                    "UpdateExpression": "ADD #count :increment",
-                    "ExpressionAttributeNames": {
-                        "#count": "count"
-                    },
-                    "ExpressionAttributeValues": {
-                        ":increment": {"N": "1"}
-                    }
-                    
-                }
-            }
-        ]
-    )
-
-    return res
+            ]
+        )
+        return (jsonify("Successfully added transaction"), 200)
+    except Exception as e:
+        print (e)
+        return (jsonify("Could not add transaction"), 500)

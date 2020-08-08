@@ -94,13 +94,20 @@ def create_tables(dynamodb):
         ProvisionedThroughput={
             'ReadCapacityUnits': 5,
             'WriteCapacityUnits': 5
+        },
+        StreamSpecification={
+            'StreamEnabled': True,
+            'StreamViewType': 'NEW_AND_OLD_IMAGES',
         }
     )
+    
     
     with open('data.json', 'r') as datafile:
         data = json.load(datafile)
 
     client = get_client()
+
+    # print (client.describe_table(TableName="Profiles"))
 
     for item in data:
         client.put_item(
@@ -115,6 +122,12 @@ def init_db_command():
     delete_tables(dynamodb)
     create_tables(dynamodb)
     click.echo('Initialized the database.')
+
+def init_table():
+    dynamodb = get_db()
+    delete_tables(dynamodb)
+    create_tables(dynamodb)
+    print('Initialized the database for test.')
 
 def init_app(app):
     app.cli.add_command(init_db_command)

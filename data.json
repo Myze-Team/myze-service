@@ -54,8 +54,8 @@
         "SK": {"S": "team knit short"},
         "size": {
           "M": {
-            "small": {"S": "CLOTHES_1"},
-            "medium": {"S": "CLOTHES_2"}
+            "S": {"S": "CLOTHES_1"},
+            "M": {"S": "CLOTHES_2"}
           }
         }
     },
@@ -64,8 +64,8 @@
         "SK": {"S": "dry academy pro pullover hoodie"},
         "size": {
           "M": {
-            "small": {"S": "CLOTHES_3"},
-            "medium": {"S": "CLOTHES_4"}
+            "S": {"S": "CLOTHES_3"},
+            "M": {"S": "CLOTHES_4"}
           }
         }
     },
@@ -82,7 +82,7 @@
         "PK": {"S": "USER_1"},
         "SK": {"S": "TRANSACTION_2"},
         "rating": {"N": "0"},
-        "returned": {"BOOL": true},
+        "returned": {"BOOL": false},
         "User-Item-GSI": {"S": "CLOTHES_3"},
         "ClothesName": {"S": "dry academy pro pullover hoodie"},
         "review": {"S": "fits nice"}
