@@ -86,5 +86,14 @@
         "User-Item-GSI": {"S": "CLOTHES_3"},
         "ClothesName": {"S": "dry academy pro pullover hoodie"},
         "review": {"S": "fits nice"}
+    },
+    {
+        "PK": {"S": "BRAND"},
+        "SK": {"S": "NAMES"},
+        "brandnames": {
+            "M": {
+                "Nike" : {"S": "exists"}
+            }
+        }
     }
 ]

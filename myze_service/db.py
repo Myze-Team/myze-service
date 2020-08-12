@@ -107,7 +107,7 @@ def create_tables(dynamodb):
 
     client = get_client()
 
-    # print (client.describe_table(TableName="Profiles"))
+    print (client.describe_table(TableName="Profiles"))
 
     for item in data:
         client.put_item(

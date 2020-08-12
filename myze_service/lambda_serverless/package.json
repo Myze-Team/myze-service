@@ -1,0 +1,19 @@
+{
+  "name": "lambda_serverless",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "serverless-dynamo-stream-plugin": "^0.1.4",
+    "serverless-offline-python": "^3.22.2",
+    "serverless-plugin-offline-dynamodb-stream": "^1.0.19"
+  },
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.30"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "",
+  "license": "ISC"
+}

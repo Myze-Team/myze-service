@@ -17,7 +17,7 @@ Resources:
       FunctionName: UpdateElasticSearch
       Description: Reads from dynamodb stream and updates elasticsearch with new data
       CodeUri: .
-      Handler: app.lambda_handler
+      Handler: handler.lambda_handler
       Runtime: python3.7
       # Events:
       #   HelloWorld:

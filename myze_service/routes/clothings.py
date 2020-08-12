@@ -210,3 +210,73 @@ def get_clothes_by_size(size):
 
     
     return res
+
+
+@clothingBlueprint.route("/brand/new", methods=["POST"])
+def create_brand():
+    data = request.get_json()
+    if not data:
+        return (jsonify("Bad Arguments"), 400)
+
+    brand = data.get("brand")
+
+    if not brand:
+        return (jsonify("Missing argument 'brand'"), 400)
+
+    brand = brand.title()
+
+    client = db.get_client()
+
+    item = client.get_item(
+        TableName = "Profiles",
+        Key = {
+            "PK": {"S": "BRAND"},
+            "SK": {"S": "NAMES" }
+        },
+        ProjectionExpression = "brandnames"
+    )
+
+    item = item["Item"]
+
+    if item["brandnames"]["M"].get(brand):
+        return (jsonify("Brand already exists"), 409)
+    else:
+        try:
+            res = client.update_item(
+                TableName = "Profiles",
+                UpdateExpression = "SET brandnames.#brand = :value",
+                ExpressionAttributeNames = {
+                    "#brand": brand
+                },
+                ExpressionAttributeValues = {
+                    ":value": {"S": "exists"}
+                },
+                Key = {
+                    "PK": {"S": "BRAND"},
+                    "SK": {"S": "NAMES" }
+                }
+            )
+            return (jsonify("Brand created successfully"), 200)
+        except Exception as e:
+            print (e)
+            return (jsonify("Could not add brand"), 500)
+
+
+@clothingBlueprint.route("/brand/names", methods=["GET"])
+def get_all_brand():
+    client = db.get_client()
+
+    res = client.get_item(
+        TableName = "Profiles",
+        Key = {
+            "PK": {"S": "BRAND"},
+            "SK": {"S": "NAMES" }
+        },
+        ProjectionExpression = "brandnames"
+    )
+
+    item = res["Item"]["brandnames"]["M"]
+
+    names = list(item.keys())
+
+    return (json.dumps(names))

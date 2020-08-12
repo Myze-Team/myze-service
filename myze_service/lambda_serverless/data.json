@@ -1,0 +1,86 @@
+[
+    {
+        "PK": "USER_1",
+        "SK": "USER_1",
+        "gender": "male"
+    },
+    {
+        "PK": "USER_2",
+        "SK": "USER_2",
+        "gender": "female"
+    },
+    {
+        "PK": "CLOTHES_1",
+        "SK": "CLOTHES_1",
+        "Item-Size-GSI": "SIZE_S",
+        "price": "$30",
+        "name": "team knit short",
+        "brand": "Nike",
+        "category": "short",
+        "count":"1"
+    },
+    {
+        "PK": "CLOTHES_2",
+        "SK": "CLOTHES_2",
+        "Item-Size-GSI": "SIZE_M",
+        "price": "$30",
+        "name": "team knit short",
+        "brand": "Nike",
+        "category": "short",
+        "count": "0"
+    },
+    {
+        "PK": "CLOTHES_3",
+        "SK": "CLOTHES_3",
+        "Item-Size-GSI": "SIZE_S",
+        "price": "$60",
+        "name": "dry academy pro pullover hoodie",
+        "brand": "Nike",
+        "category": "hoodie",
+        "count": "1"
+    },
+    {
+        "PK": "CLOTHES_4",
+        "SK": "CLOTHES_4",
+        "Item-Size-GSI": "SIZE_M",
+        "price": "$60",
+        "name": "dry academy pro pullover hoodie",
+        "brand": "Nike",
+        "category": "hoodie",
+        "count": "0"
+    },
+    {
+        "PK": "BRAND_Nike",
+        "SK": "team knit short",
+        "size": {
+            "S": "CLOTHES_1",
+            "M": "CLOTHES_2"
+        }
+    },
+    {
+        "PK": "BRAND_Nike",
+        "SK": "dry academy pro pullover hoodie",
+        "size": {
+            "S": "CLOTHES_3",
+            "M": "CLOTHES_4"
+        }
+    },
+    {
+        "PK": "USER_1",
+        "SK": "TRANSACTION_1",
+        "rating": "0",
+        "returned": true,
+        "User-Item-GSI": "CLOTHES_1",
+        "ClothesName": "team knit short",
+        "review": "doesn't fit"
+    },
+    {
+        "PK": "USER_1",
+        "SK": "TRANSACTION_2",
+        "rating": "0",
+        "returned": false,
+        "User-Item-GSI": "CLOTHES_3",
+        "ClothesName": "dry academy pro pullover hoodie",
+        "review": "fits nice"
+    }
+]
